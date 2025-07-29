@@ -1,87 +1,43 @@
-# Welcome to React Router!
+# Example of Flagship implementation with React Router
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+[Example documentation](https://docs.developers.flagship.io/docs/react-router-mode-framework-remixrun-integration-with-flagship#/)
 
 ## Getting Started
 
-### Installation
-
-Install the dependencies:
+Install package
 
 ```bash
-npm install
+yarn install
 ```
 
-### Development
-
-Start the development server with HMR:
+Run the development server:
 
 ```bash
-npm run dev
+yarn dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+Open [http://localhost:5173](http://localhost:5173) with your browser to see the result.
 
-## Building for Production
+## Project Structure
 
-Create a production build:
+This example demonstrates how to integrate Flagship feature flagging with React Router v7+. Key files include:
 
-```bash
-npm run build
-```
+- root.tsx - Main layout with Flagship provider setup
+- flagship.ts - SDK initialization helpers
+- routes - Application routes
+- components - Reusable components using Flagship flags
 
-## Deployment
+## Features Demonstrated
 
-### Docker Deployment
+- Initializing Flagship SDK in a React Router application
+- Pre-fetching flags with route loaders
+- Using flag values in components
+- Sending analytics hits
+- Handling client-side navigation with flags
 
-To build and run using Docker:
+## Learn More
 
-```bash
-docker build -t my-app .
+To learn more about Flagship and React Router, check out the following resources:
 
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+- [Flagship React SDK Documentation](https://docs.developers.flagship.io/docs/react-sdk)
+- [React Router Documentation](https://reactrouter.com/en/main)
