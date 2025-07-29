@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { MyFlagComponent } from "~/components/MyFlagComponent";
+import { MyButtonSendHit } from "~/components/MyButtonSendHit";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,5 +10,12 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <>
+      <h1>Example of Flagship implementation with React Router framework</h1>
+      <p>flag key: my_flag_key</p>
+      <MyFlagComponent />
+      <MyButtonSendHit />
+    </>
+  );
 }

@@ -1,29 +1,38 @@
+// app/root.tsx
 import {
-  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteLoaderData,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import Nav from "./components/Nav";
+import { getFsVisitorData } from "./helpers/flagship";
+import FlagshipProvider, {
+  LogLevel,
+  type SerializedFlagMetadata,
+} from "@flagship.io/react-sdk";
 
-export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
-];
+// Loader function to fetch initial flag data for the visitor before rendering the app
+export async function loader({ params }: Route.LoaderArgs) {
+  const visitor = await getFsVisitorData({
+    visitorId: "visitorId",
+    context: {
+      key: "value",
+    },
+    hasConsented: true,
+  });
+  return visitor.getFlags().toJSON();
+}
 
+// Layout component wraps the app with FlagshipProvider and sets up the HTML structure
 export function Layout({ children }: { children: React.ReactNode }) {
+  // Get initial flags data from the loader
+  const initialFlagsData = useRouteLoaderData<SerializedFlagMetadata[]>("root");
   return (
     <html lang="en">
       <head>
@@ -33,9 +42,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
+        <FlagshipProvider
+          envId={import.meta.env.VITE_ENV_ID}
+          apiKey={import.meta.env.VITE_API_KEY}
+          logLevel={LogLevel.DEBUG}
+          initialFlagsData={initialFlagsData}
+          visitorData={{
+            id: "visitorId",
+            hasConsented: true,
+            context: {
+              key: "value",
+            },
+          }}
+        >
+          <div className={"container"}>
+            <div className="nav">
+              <Nav />
+            </div>
+            <main className={"main"}>{children}</main>
+          </div>
+
+          <ScrollRestoration />
+          <Scripts />
+        </FlagshipProvider>
       </body>
     </html>
   );
@@ -43,33 +72,4 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return <Outlet />;
-}
-
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
-  }
-
-  return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
-  );
 }
